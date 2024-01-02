@@ -4,6 +4,6 @@ export * from './useTasks';
 export * from './useAddProject';
 export * from './useHome';
 export * from './Navbar';
-export * from './Profile';
+export * from './useProfile';
 export * from './Modal';
 

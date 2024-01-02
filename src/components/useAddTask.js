@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom'; // Import useHistory for redirecting after the post request
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export const useAddTask = () => {

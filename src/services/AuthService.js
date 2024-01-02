@@ -1,6 +1,6 @@
 import axios from "axios";
 import { decodeToken, getUserIdFromToken, getUsernameFromToken, getRoleFromToken } from './tokenService';
-import jwtDecode from "jwt-decode"; // You can use a library like jwt-decode to decode the JWT
+import jwtDecode from "jwt-decode";
 
 const login = async (email, password) => {
     try {
@@ -15,7 +15,6 @@ const login = async (email, password) => {
 
         const token = response.data.jwtToken;
 
-        // Store token in local storage
         localStorage.setItem("token", token);
 
         const user = {

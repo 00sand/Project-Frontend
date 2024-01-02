@@ -1,22 +1,31 @@
-import '../../styles/output.css';
-import React, { useState } from "react";
-import { AuthService } from "../../services/AuthService";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { AuthService } from '../../services/AuthService';
+import '../../styles/output.css';
+
+const schema = yup.object({
+    username: yup.string().required("Username is required"),
+    email: yup.string().required("Email is required").email("Invalid email format"),
+    password: yup.string().required("Password is required"),
+    role: yup.string().required("Role is required")
+}).required();
 
 function RegisterPage() {
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema),
+        mode: 'onBlur'
+    });
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("User");
     const { setAuthInfo } = useAuth();
-
     let history = useNavigate();
 
-    const register = async () => {
+    const registerUser = async (data) => {
         try {
-            const user = await AuthService.register(username, email, password, role);
+            const user = await AuthService.register(data.username, data.email, data.password, data.role);
 
             if (user && user.username) {
                 setAuthInfo({
@@ -25,12 +34,11 @@ function RegisterPage() {
                     userId: user.userId,
                     isLoggedIn: true,
                 });
-                console.log("Registration success!")
-                history('/home')
+                console.log("Registration success!");
+                history('/home');
             } else {
                 console.error("Unexpected user object:", user);
             }
-
         } catch (error) {
             alert("Registration failed: " + error.message);
         }
@@ -40,60 +48,42 @@ function RegisterPage() {
         <div className="bg-gray-900 flex items-center justify-center h-screen">
             <div className="w-96 p-8 bg-gray-800 rounded-lg">
                 <h1 className="text-3xl text-white font-bold mb-6">Register</h1>
-                <div className="space-y-4">
+                <form onSubmit={handleSubmit(registerUser)} className="space-y-4">
                     <div>
                         <label htmlFor="username" className="text-white">Username</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            className="w-full bg-gray-700 text-white rounded-md py-2 px-3"
-                        />
+                        <input {...register("username")} type="text" id="username" className="w-full bg-gray-700 text-white rounded-md py-2 px-3" />
+                        {errors.username && <span className="text-red-500 text-sm">{errors.username.message}</span>}
                     </div>
                     <div>
                         <label htmlFor="email" className="text-white">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            className="w-full bg-gray-700 text-white rounded-md py-2 px-3"
-                        />
+                        <input {...register("email")} type="email" id="email" className="w-full bg-gray-700 text-white rounded-md py-2 px-3" />
+                        {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
                     </div>
                     <div>
                         <label htmlFor="password" className="text-white">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            className="w-full bg-gray-700 text-white rounded-md py-2 px-3"
-                        />
+                        <input {...register("password")} type="password" id="password" className="w-full bg-gray-700 text-white rounded-md py-2 px-3" />
+                        {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                     </div>
                     <div>
                         <label htmlFor="role" className="text-white">Role</label>
-                        <select
-                            id="role"
-                            value={role}
-                            onChange={e => setRole(e.target.value)}
-                            className="w-full bg-gray-700 text-white rounded-md py-2 px-3"
-                        >
+                        <select {...register("role")} id="role" className="w-full bg-gray-700 text-white rounded-md py-2 px-3">
                             <option value="User">User</option>
                             <option value="Admin">Admin</option>
                         </select>
+                        {errors.role && <span className="text-red-600">{errors.role.message}</span>}
                     </div>
-                    <button onClick={register} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md">
+                    <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md">
                         Register
                     </button>
                     <p className="text-white text-center">
                         Already have an account?
                         <a href="/login" className="text-blue-500 hover:text-blue-600"> Sign In</a>
                     </p>
-                </div>
+                </form>
             </div>
         </div>
     );
 }
 
 export default RegisterPage;
+

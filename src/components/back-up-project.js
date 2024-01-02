@@ -34,7 +34,6 @@ export const Project = () => {
                     return acc;
                 }, { ...initialStatusData });
 
-                console.log('Processed Data:', tasksByStatus); // Check the data after processing
                 setStatusData(tasksByStatus);
 
                 // Adding this log to check the current statusData state after updating it
@@ -50,7 +49,6 @@ export const Project = () => {
         if (!destination) return;
 
         if (source.droppableId !== destination.droppableId) {
-            // Move item to a different droppable
             const sourceItems = Array.from(statusData[source.droppableId].items);
             const [movedItem] = sourceItems.splice(source.index, 1);
             const destinationItems = Array.from(statusData[destination.droppableId].items);

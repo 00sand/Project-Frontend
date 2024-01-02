@@ -1,13 +1,18 @@
 import axios from "axios";
+import { useState } from 'react';
 import { getUserIdFromToken, decodeToken } from '../services';
-import { useAuth, setAuthInfo } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
-export const Profile = {
-    async update(field, value, setAuthInfo) {
-        const userId = getUserIdFromToken();
+export const useProfile = () => {
+    const { setAuthInfo } = useAuth();
+    const userId = getUserIdFromToken();
 
+    const [error, setError] = useState(null);
+
+    const updateProfile = async (field, value) => {
         if (!userId) {
-            throw new Error("User ID not found in token.");
+            setError("User ID not found.");
+            throw new Error("User ID not found.");
         }
 
         try {
@@ -25,15 +30,10 @@ export const Profile = {
                 throw new Error(response.data.error);
             }
 
-            // Check if the server response contains a new token
             if (response.data.token) {
-                // Store the new token in local storage
                 localStorage.setItem('token', response.data.token);
-                // Decode the new token to get updated user information
                 const updatedUser = decodeToken(response.data.token);
-                console.log(updatedUser)
 
-                // Update the app state with the new user information
                 setAuthInfo(prevState => ({
                     ...prevState,
                     username: updatedUser.username
@@ -44,14 +44,17 @@ export const Profile = {
                     ...prevState,
                     username: updatedUser.username
                 }));
-
             }
 
-            console.log('Server Response:', response.data);
             return response.data;
-        } catch (error) {
-            console.error("Update error", error);
-            throw error;
+        } catch (err) {
+            setError(err.message);
+            throw err;
         }
-    }
+    };
+
+    return {
+        updateProfile,
+        error
+    };
 };

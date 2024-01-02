@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Profile } from '../../components/Profile';
+import { useProfile } from '../../components/useProfile';
 import { useAuth, setAuthInfo } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
@@ -9,11 +9,11 @@ function ProfilePage() {
     const [email2, setEmail2] = useState('');
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
-    const { authState, setAuthInfo } = useAuth();
+    const { authState } = useAuth();
+    const { updateProfile, error } = useProfile();
     const history = useNavigate();
 
     useEffect(() => {
-        console.log("Auth State Updated:", authState);
     }, [authState]);
 
     const handleSubmit = async (field, value1, value2) => {
@@ -23,11 +23,9 @@ function ProfilePage() {
         }
 
         try {
-            await Profile.update(field, value1, setAuthInfo);
+            await updateProfile(field, value1);
             alert("User information updated");
-            history("/home")
-
-
+            history("/home");
         } catch (error) {
             alert("Update failed: " + error.message);
         }
@@ -39,7 +37,7 @@ function ProfilePage() {
                 <h1 className="text-3xl text-white font-bold mb-6">Profile</h1>
 
                 <h2 className="text-xl text-white mb-4">{authState.username}</h2>
-
+                {error && <p className="text-red-500">{error}</p>}
                 <div className="space-y-4">
                     <div>
                         <label htmlFor="username" className="text-white">New Username</label>

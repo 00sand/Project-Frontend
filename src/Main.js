@@ -13,6 +13,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { Unauthorized } from './pages/UnauthorizedPage';
 import { PageNotFound } from './pages/PageNotFound';
+import { IntroPage } from './pages/IntroPage';
 
 
 const Main = () => {
@@ -36,7 +37,8 @@ const Main = () => {
         <>
             <Navbar onLogout={handleLogout} />
             <Routes>
-                <Route path="/" element={<RegisterPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/" element={<IntroPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="profile" element={authState.isLoggedIn ? <ProfilePage /> : <Unauthorized />} />
                 <Route path="project/:id" element={authState.isLoggedIn ? <ProjectPage /> : <Unauthorized />} />

@@ -37,11 +37,26 @@ export const useTask = () => {
             });
     }
 
+    const editTask = (updatedTaskData) => {
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/tasks/${id}`, updatedTaskData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then(response => {
+                history(-1); // Navigate back after successful update
+            })
+            .catch(error => {
+                console.error('Error updating the task:', error);
+            });
+    }
+
     return {
         task,
         showModal,
         setShowModal,
-        deleteTask
+        deleteTask,
+        editTask
     };
 }
 

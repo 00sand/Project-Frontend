@@ -14,7 +14,7 @@ export const Navbar = ({ onLogout }) => {
                             <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</Link>
                         </li>
                         <li className="pr-6">
-                            <Link to="/" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Register</Link>
+                            <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Register</Link>
                         </li>
                     </ul>
                 }

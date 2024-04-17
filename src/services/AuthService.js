@@ -42,6 +42,7 @@ const register = async (username, email, password, role) => {
         const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users`, payload);
 
         if (response.data.error) {
+            console.log(process.env.REACT_APP_API_BASE_URL)
             throw new Error(response.data.error);
         }
 

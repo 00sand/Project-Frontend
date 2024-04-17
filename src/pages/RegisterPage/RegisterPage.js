@@ -41,6 +41,7 @@ function RegisterPage() {
             }
         } catch (error) {
             alert("Registration failed: " + error.message);
+
         }
     };
 

@@ -37,8 +37,7 @@ const register = async (username, email, password, role) => {
         Password: password,
         Role: role
     };
-    console.log(process.env.REACT_APP_API_BASE_URL)
-    console.log(REACT_APP_API_BASE_URL)
+
     try {
         const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users`, payload);
 
@@ -47,7 +46,7 @@ const register = async (username, email, password, role) => {
         }
 
         const token = response.data.jwtToken;
-        console.log(process.env.REACT_APP_API_BASE_URL)
+
         localStorage.setItem("token", token);
 
         const user = {

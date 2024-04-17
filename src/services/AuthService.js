@@ -57,11 +57,19 @@ const register = async (username, email, password, role) => {
 
         return user;
     } catch (error) {
-        if (error.response) {
-            console.error("Server responded with:", error.response.data.message);
-            console.error("Errors:", error.response.data.errors);
-        }
+        // Enhanced error logging
         console.error("Registration error", error.message);
+        if (error.response) {
+            // Log more details from the server's response if available
+            console.error("Server responded with:", error.response.status, error.response.statusText);
+            console.error("Server data:", error.response.data);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error("No response received:", error.request);
+        } else {
+            // Something happened in setting up the request that triggered an error
+            console.error("Error setting up request:", error.message);
+        }
         throw error;
     }
 };
